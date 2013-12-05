@@ -1,9 +1,9 @@
 module FlashCookieSession
-  cattr_accessor :extra_ua_matcher
-    
   class Middleware
     USER_AGENT_MATCHER = /^(Adobe|Shockwave) Flash/.freeze
     HTTP_REFERER_MATCHER = /\.swf$/.freeze
+    
+    cattr_accessor :extra_ua_matcher
 
     def initialize(app, session_key = Rails.application.config.session_options[:key])
       @app = app
