@@ -1,4 +1,6 @@
 module FlashCookieSession
+  cattr_accessor :extra_ua_matcher
+    
   class Middleware
     USER_AGENT_MATCHER = /^(Adobe|Shockwave) Flash/.freeze
     HTTP_REFERER_MATCHER = /\.swf$/.freeze
@@ -11,7 +13,7 @@ module FlashCookieSession
     def call(env)
       referrer = env['HTTP_REFERER'].to_s.split('?').first
 
-      if env['HTTP_USER_AGENT'] =~ USER_AGENT_MATCHER || referrer =~ HTTP_REFERER_MATCHER
+      if env['HTTP_USER_AGENT'] =~ self.extra_ua_matcher || env['HTTP_USER_AGENT'] =~ USER_AGENT_MATCHER || referrer =~ HTTP_REFERER_MATCHER
         req = Rack::Request.new(env)
         the_session_key = [ @session_key, req.params[@session_key] ].join('=').freeze if req.params[@session_key]
 
